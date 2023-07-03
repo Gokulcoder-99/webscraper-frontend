@@ -1,6 +1,7 @@
 import './App.css';
 import React, { useState } from 'react';
 function App() {
+  const[loading,setLoading]=useState(false)
   const [url, setUrl] = useState('');
   const [img,setImg]=useState('');
   const [name,setName]=useState('');
@@ -15,8 +16,9 @@ function App() {
   };
  const handleClick=(e)=>{
   e.preventDefault()
+  setLoading(true)
 
-fetch('http://localhost:5000/api/create', {
+fetch('https://web-scarpe-amazon.onrender.com/api/create', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json'
@@ -26,6 +28,7 @@ fetch('http://localhost:5000/api/create', {
   .then(response => response.json())
   .then(data => {
     // Process the fetched data returned from the backend
+    setLoading(false)
     const{Image,Name,Rating,Price,Link} = data;
     setImg(Image)
     setName(Name)
@@ -49,6 +52,7 @@ fetch('http://localhost:5000/api/create', {
         <button className='btn' onClick={handleClick}>Search</button>
         </div>
 
+   { loading ?(<h1 className="loading">loading</h1>):(    
         <div className='response'>
           <div className='image'>
             <img src={img} alt='ProductImage' />
@@ -60,6 +64,7 @@ fetch('http://localhost:5000/api/create', {
                   <h3>Link:<a href={link}>{link}</a></h3>
           </div>
         </div>
+        )}
       </div>
   </div>
   );

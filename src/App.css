@@ -41,6 +41,11 @@ header{
   border-radius: 10px;
   margin-top: 10px;
 }
+.loading{
+  text-align: center;
+  font-size: 50px;
+  padding: 20px;
+}
 .response{
   display: flex;
   margin: 5%;
