@@ -1,73 +1,28 @@
-import './App.css';
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react'
+import"./App.css";
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Homepage from './pages/Homepage'
 function App() {
-  const[loading,setLoading]=useState(false)
-  const [url, setUrl] = useState('');
-  const [img,setImg]=useState('');
-  const [name,setName]=useState('');
-  const [rating,setRating]=useState('');
-  const [price,setPrice]=useState('');
-  const [link,setLink]=useState('');
-
-
-  const handleUrlChange = (event) => {
-    setUrl(event.target.value);
-
-  };
- const handleClick=(e)=>{
-  e.preventDefault()
-  setLoading(true)
-
-fetch('https://web-scarpe-amazon.onrender.com/api/create', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({ url })  // Sending the URL in the request body
-})
-  .then(response => response.json())
-  .then(data => {
-    // Process the fetched data returned from the backend
-    setLoading(false)
-    const{Image,Name,Rating,Price,Link} = data;
-    setImg(Image)
-    setName(Name)
-    setRating(Rating)
-    setPrice(Price)
-    setLink(Link)
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
- }
-
-  
-  return (
-<div className='App'>
-      <div className='main'>
-        <header><h1>Amazon Web Scarpe</h1></header>
-        <div className='search'>
-        <label htmlFor='url' className='url'>Product url: </label>
-        <input type='url' id='url' value={url} onChange={handleUrlChange}/> 
-        <button className='btn' onClick={handleClick}>Search</button>
-        </div>
-
-   { loading ?(<h1 className="loading">loading</h1>):(    
-        <div className='response'>
-          <div className='image'>
-            <img src={img} alt='ProductImage' />
-          </div>
-          <div className='info'>
-                  <h3>Name={name}</h3>
-                  <h3>Rating:{rating}</h3>
-                  <h3>Price:{price}</h3>
-                  <h3>Link:<a href={link}>{link}</a></h3>
-          </div>
-        </div>
-        )}
-      </div>
-  </div>
-  );
+  const [productData, setProducts] = useState([])
+  const fetchProducts = async () => {
+    const res = await fetch(`https://webscarper.onrender.com/api/product`)
+    const obj = await res.json()
+    const data = obj.mess
+    if (data && data) {
+      setProducts(data)
+    }
+  }
+ 
+  useEffect(() => {
+    fetchProducts()
+  }, [])
+  console.log(productData)
+   return (
+    <BrowserRouter>
+    <Routes>
+    <Route path="/" element ={<Homepage productData={productData}/>}/>
+    </Routes>
+    </BrowserRouter>
+  )
 }
-
-export default App;
+ export default App;
